@@ -1,5 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <functional>
+
 class Bank
 {
 	// Const-macros
@@ -35,11 +38,11 @@ class Bank
 			private:
 				// Attributes
 				int _id;
-				int _value;
+				double _value;
 
 			public:
 				// Constructors
-				Account(int id, int value) : _id(id), _value(value) {}	
+				Account(int id, double value) : _id(id), _value(value) {}	
 
 				// Operator-overloading
 				friend std::ostream& operator << (std::ostream& p_os, const Account& p_account)
@@ -50,14 +53,14 @@ class Bank
 
 				// Getters/Setters
 				const int& getId() { return this->_id; }
-				const int& getValue() { return this->_value; }
+				const double& getValue() { return this->_value; }
 
 				// General-methods
 				void log() { ACCOUNT_LOG }
 		};
 
 		// Attributes
-		int _liquidity;
+		double _liquidity;
 		std::vector<Account *> _clientAccounts;
 
 	public:
@@ -66,6 +69,14 @@ class Bank
 			_liquidity(0)
 		{
 
+		}
+
+		~Bank()
+		{
+			std::vector<Account *>::iterator it_begin = this->_clientAccounts.begin();
+			std::vector<Account *>::iterator it_end = this->_clientAccounts.end();
+			for (std::vector<Account *>::iterator account = it_begin; account < it_end; account++)
+				delete *account;
 		}
 
 		// Operator-overloading
@@ -78,8 +89,17 @@ class Bank
 			return (p_os);
 		}
 
+		Account*& operator[](int id)
+		{
+			std::vector<Account *>::iterator res; 
+			res = std::find_if(this->_clientAccounts.begin(), this->_clientAccounts.end());
+			if (res == this->_clientAccounts.end())
+				std::exit(0);
+			return *res;
+		}
+
 		// Getters/Setters
-		const int& getLiquidity() { return this->_liquidity; }
+		const double& getLiquidity() { return this->_liquidity; }
 		const std::vector<Account *>& getClientAccounts() { return this->_clientAccounts; }
 
 		// General-methods
@@ -104,6 +124,7 @@ class Bank
 				{
 					// Finding-the-Account-and-if-not-found-then-error 
 					ITER({
+						delete *account;
 						this->_clientAccounts.erase(account);
 						SUCCESS_deleteAccount
 						return;
@@ -115,11 +136,25 @@ class Bank
 				
 				// Modify-methods
 					// Modify-add-money-method
-					void modifyAccount_addMoney(int id, int money_to_add)
+					void modifyAccount_addMoney(int id, double money_to_add)
 					{
 						// Finding-the-Account-and-if-not-found-then-error 
 						ITER({
-							const_cast<int&>((*account)->getValue()) += money_to_add;
+							const_cast<double&>((*account)->getValue()) += money_to_add * 0.95;
+							this->_liquidity += money_to_add * 0.05;
+							SUCCESS_modifyAccount
+							return;
+						})
+
+						// Account-not-registered
+						ERROR_ID_NOT_REGISTERED
+					}
+
+					void modifyAccount_removeMoney(int id, double money_to_remove)
+					{
+						// Finding-the-Account-and-if-not-found-then-error 
+						ITER({
+							const_cast<double&>((*account)->getValue()) -= money_to_remove;
 							SUCCESS_modifyAccount
 							return;
 						})
@@ -139,6 +174,11 @@ class Bank
 
 					// Account-not-registered
 					ERROR_ID_NOT_REGISTERED
+				}
+
+				void logBank()
+				{
+					std::cout << *this << std::endl;
 				}
 };
 
@@ -163,8 +203,10 @@ int main()
 	// Account-modify-tests
 	std::cout << "---- Account-modify-tests ----" << std::endl;
 	bank.createAccount(0, 100);
+	bank.logBank();
 	bank.logAccount(0);
 	bank.modifyAccount_addMoney(0, 500);
+	bank.logBank();
 	bank.logAccount(0);
 
 	return (0);
