@@ -1,35 +1,85 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <functional>
+
+#include "DivideAndRule.hpp"
+
+
+const char* Bank::OutOfRangeIndex::what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: invalid index range");
+				}
 
 class Bank
 {
-	// Const-macros
-	#define HASHMAP_SIZE 1
-		// Error-macros
-		#define ERROR_NOT_CORRECT_ID std::cerr << "BANK SYSTEM ERROR: account creation failed because new accounts id is negative" << std::endl;
-		#define ERROR_ID_ALREADY_EXISTS std::cerr << "BANK SYSTEM ERROR: account creation failed because new accounts id already exists" << std::endl;
-		#define ERROR_ID_NOT_REGISTERED std::cerr << "BANK SYSTEM ERROR: account with id " << id << " doesnt exist" << std::endl;
+	// Exceptions
+		// Error-exceptions
+		class OutOfRangeIndex : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: invalid index range");
+				}
+		};
+		class NotCorrectId : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: account creation failed because new accounts id is negative");
+				}
+		};
+		class IdAlreadyExists : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: account creation failed because new accounts id already exists");
+				}
+		};
+		class IdNotRegistered : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: account not registered");
+				}
+		};
+		class LoanBankNotEnoughLiquidity : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: not enough bank liquidity to give a loan to account");
+				}
+		};
+		class LoanAccountNotEnoughFunds : public std::exception
+		{
+			public:
+                const char* what() const throw ()
+				{
+					return ("BANK SYSTEM ERROR: account doesnt have enough funds");
+				}
+		};
+	// Macros
 		// Success-macros
 		#define SUCCESS_createAccount std::cout << "BANK SYSTEM SUCCESS: account creation with id=" << id << std::endl;
 		#define SUCCESS_deleteAccount std::cout << "BANK SYSTEM SUCCESS: account deletion with id=" << id << std::endl;
 		#define SUCCESS_modifyAccount std::cout << "BANK SYSTEM SUCCESS: account modification with id=" << id << std::endl;
+
 		// Log-macros
 		#define ACCOUNT_LOG std::cout << "BANK SYSTEM LOG ACCOUNT [" << this->_id << "]: funds=" << this->_value << std::endl;
 
-	// Func-macros
-	#define ITER(callback) \
-		/* Args-error-checks */ \
-		if (id < 0) { \
-			ERROR_NOT_CORRECT_ID \
-			return; \
-		} \
-		std::vector<Account *>::const_iterator it_begin = this->_clientAccounts.begin(); \
-		std::vector<Account *>::const_iterator it_end = this->_clientAccounts.end(); \
-		for (std::vector<Account *>::const_iterator account = it_begin; account < it_end; account++) \
-			if ((*account)->getId() == id) \
-				callback
+		// Func-macros
+		#define ITER(callback) \
+			/* Args-error-checks */ \
+			if (id < 0) { \
+				throw NotCorrectId(); \
+				return; \
+			} \
+			std::vector<Account *>::const_iterator it_begin = this->_clientAccounts.begin(); \
+			std::vector<Account *>::const_iterator it_end = this->_clientAccounts.end(); \
+			for (std::vector<Account *>::const_iterator account = it_begin; account < it_end; account++) \
+				if ((*account)->getId() == id) \
+					callback
 
 	private:
 		// Account-class
@@ -58,13 +108,24 @@ class Bank
 				// General-methods
 				void log() { ACCOUNT_LOG }
 		};
+		
+		// Structs
+			// []-bank-operator-overloading-find-if-third-argument
+			struct equalIds
+			{
+				int _comp;
+
+				equalIds(int comp): _comp(comp) {}
+
+				bool operator () (Account *_) { return _->getId() == this->_comp; }
+			};
 
 		// Attributes
 		double _liquidity;
 		std::vector<Account *> _clientAccounts;
 
 	public:
-		// Constructors
+		// Constructors/Destructor
 		Bank() :
 			_liquidity(0)
 		{
@@ -85,16 +146,16 @@ class Bank
 			p_os << "Bank informations : " << std::endl;
 			p_os << "Liquidity : " << p_bank._liquidity << std::endl;
 			for (auto &clientAccount : p_bank._clientAccounts)
-       		p_os << *clientAccount << std::endl;
+       			p_os << *clientAccount << std::endl;
 			return (p_os);
 		}
 
-		Account*& operator[](int id)
+		Account*& operator [] (int id)
 		{
 			std::vector<Account *>::iterator res; 
-			res = std::find_if(this->_clientAccounts.begin(), this->_clientAccounts.end());
+			res = std::find_if(this->_clientAccounts.begin(), this->_clientAccounts.end(), equalIds(id));
 			if (res == this->_clientAccounts.end())
-				std::exit(0);
+				throw OutOfRangeIndex();
 			return *res;
 		}
 
@@ -103,14 +164,18 @@ class Bank
 		const std::vector<Account *>& getClientAccounts() { return this->_clientAccounts; }
 
 		// General-methods
+		void logBank()
+		{
+			std::cout << *this << std::endl;
+		}
 			// Accounts-manipulation-methods
 				// Create-method
 				void createAccount(int id, int value)
 				{	
 					// Error-check-if-Account-already-exists
 					ITER({
-						ERROR_ID_ALREADY_EXISTS
-						return; 
+						throw IdAlreadyExists();
+						return;
 					})
 
 					// Creating-and-adding-the-new-Account-to-the-bank
@@ -131,7 +196,7 @@ class Bank
 					})
 
 					// Account-not-registered
-					ERROR_ID_NOT_REGISTERED
+					throw IdNotRegistered();
 				}
 				
 				// Modify-methods
@@ -147,7 +212,7 @@ class Bank
 						})
 
 						// Account-not-registered
-						ERROR_ID_NOT_REGISTERED
+						throw IdNotRegistered();
 					}
 
 					void modifyAccount_removeMoney(int id, double money_to_remove)
@@ -160,7 +225,26 @@ class Bank
 						})
 
 						// Account-not-registered
-						ERROR_ID_NOT_REGISTERED
+						throw IdNotRegistered();
+					}
+
+					void modifyAccount_giveLoan(int id, double loan_value)
+					{
+						// Finding-the-Account-and-if-not-found-then-error 
+						ITER({
+							// Account-funds-and-bank-liquidity-checks
+							if (loan_value > this->_liquidity) { throw LoanBankNotEnoughLiquidity(); return; }
+							if ((*account)->getValue() < loan_value) { throw LoanAccountNotEnoughFunds(); return; }
+
+							// Changing-values
+							const_cast<double&>((*account)->getValue()) += loan_value;
+							this->_liquidity -= loan_value;
+							SUCCESS_modifyAccount
+							return;
+						})
+
+						// Account-not-registered
+						throw IdNotRegistered();
 					}
 
 				// Log-method
@@ -173,41 +257,7 @@ class Bank
 					})
 
 					// Account-not-registered
-					ERROR_ID_NOT_REGISTERED
+					throw IdNotRegistered();
 				}
-
-				void logBank()
-				{
-					std::cout << *this << std::endl;
-				}
+			
 };
-
-int main()
-{
-	Bank bank;
-
-	// Account-creation-tests
-	std::cout << "---- Account-creation-tests ----" << std::endl;
-	bank.createAccount(-2, 100);
-	bank.createAccount(0, 100);
-	bank.createAccount(0, 100);
-	bank.createAccount(2, 100);
-
-	// Account-delete-tests
-	std::cout << "---- Account-delete-tests ----" << std::endl;
-	bank.deleteAccount(5);
-	bank.deleteAccount(0);
-	bank.deleteAccount(2);
-	bank.deleteAccount(2);
-
-	// Account-modify-tests
-	std::cout << "---- Account-modify-tests ----" << std::endl;
-	bank.createAccount(0, 100);
-	bank.logBank();
-	bank.logAccount(0);
-	bank.modifyAccount_addMoney(0, 500);
-	bank.logBank();
-	bank.logAccount(0);
-
-	return (0);
-}
