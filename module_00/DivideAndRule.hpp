@@ -52,7 +52,7 @@ class Bank
 				double _value;
 
 			public:
-				// Constructors
+				// Constructors/Destructor
 				Account(int id, double value);
 
 				// Operator-overloading
@@ -76,8 +76,10 @@ class Bank
 			{
 				int _comp;
 
+				// Constructors/Destructor
 				equalIds(int comp);
 
+				// General-methods
 				bool operator () (Account *_);
 			};
 
@@ -91,7 +93,14 @@ class Bank
 		~Bank();
 
 		// Operator-overloading
-		friend std::ostream& operator << (std::ostream& p_os, const Bank& p_bank);
+		friend std::ostream& operator << (std::ostream& p_os, const Bank& p_bank)
+		{
+			p_os << "Bank informations : " << std::endl;
+			p_os << "Liquidity : " << p_bank._liquidity << std::endl;
+			for (auto &clientAccount : p_bank._clientAccounts)
+       			p_os << *clientAccount << std::endl;
+			return (p_os);
+		}
 
 		Account*& operator [] (int id);
 

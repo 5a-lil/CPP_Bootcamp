@@ -17,9 +17,9 @@ Subject explicit:
 - [x] The Account structure must be internal to the Bank structure.
 - [x] The Bank structure must contain an operator[] to get an account by it’s ID, but you aren’t allow to make a while or a for loop to find the account corresponding to such ID
  - [x] Learn functors
-- [x] The error management must be done via throw, and the main must handle those
-errors
+- [x] The error management must be done via throw, and the main must handle those errors
 
 Personal explicit:
 - [ ] Make a good main in a different file
+- [x] Implement Bank class members in different cpp file
 - [x] Make the Makefile

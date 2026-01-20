@@ -1,5 +1,5 @@
 
-#include "./DivideAndRule.cpp"
+#include "./DivideAndRule.hpp"
 
 #define DO(callback) \
 	try { \
