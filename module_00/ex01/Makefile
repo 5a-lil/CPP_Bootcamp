@@ -1,9 +1,9 @@
 COMPIL = c++
-CPPFLAGS = -Wall -Wextra -Werror #-std=c++98
-SRCS = main.cpp DivideAndRule.cpp
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+SRCS = main.cpp Vector2.cpp
 OBJDIR = obj
 OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
-NAME = bank
+NAME = graph
 
 all: $(NAME)
 
