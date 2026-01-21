@@ -97,8 +97,10 @@ class Bank
 		{
 			p_os << "Bank informations : " << std::endl;
 			p_os << "Liquidity : " << p_bank._liquidity << std::endl;
-			for (auto &clientAccount : p_bank._clientAccounts)
-       			p_os << *clientAccount << std::endl;
+			std::vector<Account *>::const_iterator it_begin = p_bank._clientAccounts.begin();
+			std::vector<Account *>::const_iterator it_end = p_bank._clientAccounts.end();
+			for (std::vector<Account *>::const_iterator it = it_begin; it < it_end; it++)
+       			p_os << *it << std::endl;
 			return (p_os);
 		}
 

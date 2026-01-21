@@ -49,9 +49,9 @@
 			throw NotCorrectId(); \
 			return; \
 		} \
-		std::vector<Account *>::const_iterator it_begin = this->_clientAccounts.begin(); \
-		std::vector<Account *>::const_iterator it_end = this->_clientAccounts.end(); \
-		for (std::vector<Account *>::const_iterator account = it_begin; account < it_end; account++) \
+		std::vector<Account *>::iterator it_begin = this->_clientAccounts.begin(); \
+		std::vector<Account *>::iterator it_end = this->_clientAccounts.end(); \
+		for (std::vector<Account *>::iterator account = it_begin; account < it_end; account++) \
 			if ((*account)->getId() == id) \
 				callback
 
