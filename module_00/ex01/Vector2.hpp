@@ -13,6 +13,9 @@ class Vector2
         Vector2(float x, float y);
         ~Vector2();
 
+        // Operator-overloading
+        friend bool operator < (Vector2 const& lhs, Vector2 const& rhs) { return lhs.norm() < rhs.norm(); }
+
         // Getters/Setters
         void setX(float x);
         void setY(float y);
@@ -20,4 +23,8 @@ class Vector2
         const float& getX() const;
         const float& getY();
         const float& getY() const;
+
+        // General-methods
+        float norm();
+        float norm() const;
 };

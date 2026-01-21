@@ -1,7 +1,10 @@
 Make a Graph class that can place Vector2 objects and display the graph
 
-- [ ] Create a contener Vector2
+- [x] Create a contener Vector2
     - [x] two components x and y of type float
+    - [x] getters and setters
+    - [x] make a compare operator for std::less used by std::map default value for third template parameter
+        - [x] "norm" method to get a Vector2 length with the center of the graph as the other point
 - [ ] Create a class Graph
     - [ ] attribute size and attribute list of Vector2 for the graph points
     - [ ] can place some Vector2 as points
