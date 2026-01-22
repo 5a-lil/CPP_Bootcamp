@@ -2,7 +2,28 @@
 
 Vector2::Vector2(float x, float y) : _x(x), _y(y) {}
 
+Vector2::Vector2(const Vector2& other)
+{
+    *this = other;
+}
+
 Vector2::~Vector2() {}
+
+bool Vector2::operator < (const Vector2& rhs) const { return this->norm() < rhs.norm(); }
+
+Vector2& Vector2::operator = (const Vector2& rhs)
+{
+    if (&rhs == this)
+        return *this;
+    this->_x = rhs._x;
+    this->_y = rhs._y;
+    return *this;
+}
+
+bool Vector2::operator == (const Vector2& rhs)
+{
+    return this->_x == rhs._x && this->_y == rhs._y;
+}
 
 void Vector2::setX(float x) { this->_x = x; }
 
