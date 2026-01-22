@@ -9,7 +9,12 @@ Vector2::Vector2(const Vector2& other)
 
 Vector2::~Vector2() {}
 
-bool Vector2::operator < (const Vector2& rhs) const { return this->norm() < rhs.norm(); }
+bool Vector2::operator < (const Vector2& rhs) const 
+{ 
+    if (this->getY() < rhs.getY()) return true;
+    if (this->getY() > rhs.getY()) return false;
+    return this->getX() < rhs.getX(); 
+}
 
 Vector2& Vector2::operator = (const Vector2& rhs)
 {
