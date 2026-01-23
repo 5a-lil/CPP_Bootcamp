@@ -42,6 +42,12 @@ const float& Vector2::getY() { return this->_y; }
 
 const float& Vector2::getY() const { return this->_y; }
 
-float Vector2::norm() { return std::sqrt(std::pow(this->_x, 2) + std::pow(this->_y, 2)); }
+float Vector2::dist(Vector2 other_point)
+{ 
+    return std::sqrt(std::pow(this->_x - other_point._x, 2) + std::pow(this->_y - other_point._y, 2)); 
+}
 
-float Vector2::norm() const { return std::sqrt(std::pow(this->_x, 2) + std::pow(this->_y, 2)); }
+float Vector2::dist(Vector2 other_point) const
+{ 
+    return std::sqrt(std::pow(this->_x - other_point._x, 2) + std::pow(this->_y - other_point._y, 2)); 
+}

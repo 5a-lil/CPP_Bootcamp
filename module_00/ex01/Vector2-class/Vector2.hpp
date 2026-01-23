@@ -28,6 +28,6 @@ class Vector2
         const float& getY() const;
 
         // General-methods
-        float norm();
-        float norm() const;
+        float dist(Vector2 other_point);
+        float dist(Vector2 other_point) const;
 };

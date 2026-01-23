@@ -7,4 +7,5 @@
 #include <exception>
 #include <map>
 #include <cmath>
+#include <fstream>
 #include "./Vector2-class/Vector2.hpp"
