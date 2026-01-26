@@ -1,5 +1,5 @@
 #pragma once
-#include "../includes.hpp"
+#include "./includes.hpp"
 
 class Graph
 {
@@ -16,6 +16,16 @@ class Graph
                 const char* what() const throw ();
 		};
         class OutOfBoundsPoint : public std::exception
+		{
+			public:
+                const char* what() const throw ();
+		};
+        class FailOpeningInputFile : public std::exception
+		{
+			public:
+                const char* what() const throw ();
+		};
+        class InputFileSyntaxNotCorrect : public std::exception
 		{
 			public:
                 const char* what() const throw ();
@@ -37,6 +47,8 @@ class Graph
         const std::map<Vector2, bool>& getPoints();
 
         // General-methods
-        void addPoint(Vector2 point);
+        void addPoints(Vector2 point);
+        void addPoints(std::string input_file_name);
         void displayGraph();
+
 };

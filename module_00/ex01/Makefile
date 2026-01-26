@@ -1,6 +1,6 @@
 COMPIL = c++
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98
-SRCS = main.cpp Vector2-class/Vector2.cpp Graph-class/Graph.cpp
+CPPFLAGS = -Wall -Wextra -Werror -I./ -std=c++98
+SRCS = $(addprefix srcs/, main.cpp Vector2-class/Vector2.cpp Graph-class/Graph.cpp utils.cpp)
 OBJDIR = obj
 OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
 NAME = graph
@@ -9,8 +9,7 @@ all: $(NAME)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
-	mkdir -p $(OBJDIR)/Vector2-class
-	mkdir -p $(OBJDIR)/Graph-class
+	mkdir -p $(addprefix $(OBJDIR)/srcs/, Vector2-class Graph-class)
 
 $(NAME): $(OBJDIR) $(OBJS)
 	$(COMPIL) $(CPPFLAGS) $(OBJS) -o $(NAME)
