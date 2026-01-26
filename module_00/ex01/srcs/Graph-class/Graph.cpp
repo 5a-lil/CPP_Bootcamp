@@ -23,46 +23,51 @@ const std::map<Vector2, bool>& Graph::getPoints() { return this->_points; }
 
 void Graph::addPoints(Vector2 point) 
 { 
-    if (point.getX() >= this->_size.getX() || 
+    if (point.getX() >= this->_size.getX() || // error checks if coor is outside of graph size
         point.getY() >= this->_size.getY() ||
         point.getX() < 0 ||
         point.getY() < 0) throw OutOfBoundsPoint();
-    this->_points[Vector2((int)point.getX(), (int)point.getY())] = true; 
+    this->_points[Vector2((int)point.getX(), (int)point.getY())] = true; // adding the point to the _points map attribute
 }
 
 void Graph::addPoints(std::string input_file_name)
 {
-    std::ifstream input_file_stream(input_file_name);
+    std::ifstream input_file_stream(input_file_name); // input-file-stream-from-file-passed-as-arg
     if (!input_file_stream) 
         throw FailOpeningInputFile();
 
-    std::string parse_line_buffer;
+    std::string parse_line_buffer; // string-used-to-store-getline()-line-to-then-parse-it
+
+    // Defines-used-in-parsing
     #define INDEX_TO_SKIP_FIRST_PAR 1
     #define INDEX_TO_SKIP_LAST_PAR 2
-    #define CORRECT_FORMAT (parse_line_buffer.front() == '(' \
-                           && count_occurences(parse_line_buffer, '|') == 1 \
-                           && parse_line_buffer.back() == ')' \
-                           && *(parse_line_buffer.end() - INDEX_TO_SKIP_LAST_PAR) != '|' \
-                           && *(parse_line_buffer.begin() + INDEX_TO_SKIP_FIRST_PAR) != '|')
+    #define CORRECT_FORMAT (parse_line_buffer.front() == '(' /*check-if-first-char-is-parentheses*/ \
+                           && count_occurences(parse_line_buffer, '|') == 1 /*check if there is only one pipe*/ \
+                           && parse_line_buffer.back() == ')' /*check if last char is parentheses*/ \
+                           && *(parse_line_buffer.end() - INDEX_TO_SKIP_LAST_PAR) != '|' /*check if pipe is aside the last parentheses*/ \
+                           && *(parse_line_buffer.begin() + INDEX_TO_SKIP_FIRST_PAR) != '|') /*check if pipe is aside the front parentheses*/
+
+    // Parse-line-by-line
     while (std::getline(input_file_stream, parse_line_buffer))
     {
-        std::cout << "Input file line: \"" << parse_line_buffer << '\"' << std::endl;
+        std::cout << "Input file line: \"" << parse_line_buffer << '\"' << std::endl; // logging
         if (!CORRECT_FORMAT)
             throw InputFileSyntaxNotCorrect();
 
+        // istringstream taking the line without parentheses
         std::istringstream parse_line_iss(parse_line_buffer.substr(INDEX_TO_SKIP_FIRST_PAR, parse_line_buffer.length() - INDEX_TO_SKIP_LAST_PAR));
-        std::string iss_word;
-        double x_coor(0), y_coor(0);
+        std::string iss_word; // string to store below getline()
+        double x_coor(0), y_coor(0); // coor variables for new point
 
-        std::getline(parse_line_iss, iss_word, '|');
-        if (!(std::istringstream(iss_word) >> x_coor))
+        std::getline(parse_line_iss, iss_word, '|'); // parsing left side
+        if (!(std::istringstream(iss_word) >> x_coor)) // check if number
             throw InputFileSyntaxNotCorrect();
-        std::getline(parse_line_iss, iss_word);
-        if (!(std::istringstream(iss_word) >> y_coor))
+        std::getline(parse_line_iss, iss_word); // parsing right side
+        if (!(std::istringstream(iss_word) >> y_coor)) // check if number
             throw InputFileSyntaxNotCorrect();
-        std::cout << "x:" << x_coor << " y:" << y_coor << std::endl;
+        std::cout << "x:" << x_coor << " y:" << y_coor << std::endl; // logging
 
-        this->addPoints(Vector2(x_coor, y_coor));
+        this->addPoints(Vector2(x_coor, y_coor)); // adding the point to Graph _points attribute
     }
 }
 

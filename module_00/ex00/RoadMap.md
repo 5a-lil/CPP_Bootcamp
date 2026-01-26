@@ -12,10 +12,10 @@ Requirements:
 - [x] It must be impossible to add money to a client account without going through the bank
 - [x] If it makes sense, the creation of a Getter and a Setter is mandatory. Getter(s) by copy will not be accepted
 - [x] If it makes sense, the creation of a const Getter is mandatory. const Getter(s) by copy will not be accepted
-- [x] You can’t create any other methods than const getters in Account structure
-- [x] The Account structure must be internal to the Bank structure.
-- [x] The Bank structure must contain an operator[] to get an account by it’s ID, but you aren’t allow to make a while or a for loop to find the account corresponding to such ID
+- [x] BONUS: You can’t create any other methods than const getters in Account structure
+- [x] BONUS: The Account structure must be internal to the Bank structure.
+- [x] BONUS: The Bank structure must contain an operator[] to get an account by it’s ID, but you aren’t allow to make a while or a for loop to find the account corresponding to such ID
     - [x] Learn functors
-- [x] The error management must be done via throw, and the main must handle those errors
+- [x] BONUS: The error management must be done via throw, and the main must handle those errors
 - [x] Implement Bank class members in different cpp file
 - [x] Make the Makefile
