@@ -9,7 +9,6 @@ all: $(NAME)
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
-	mkdir -p $(addprefix $(OBJDIR)/srcs/, Vector2-class Graph-class)
 
 $(NAME): $(OBJDIR) $(OBJS)
 	$(COMPIL) $(CPPFLAGS) $(OBJS) -o $(NAME)
