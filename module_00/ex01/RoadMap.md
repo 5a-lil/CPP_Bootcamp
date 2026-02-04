@@ -22,3 +22,4 @@ Make a Graph class that can place Vector2 objects and display the graph
 
 Notes:
 activate the c++98 flag and compile ex01
+correct the bug with input file, "4d" works as "4"
