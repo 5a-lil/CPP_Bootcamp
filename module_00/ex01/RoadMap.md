@@ -20,8 +20,5 @@ Make a Graph class that can place Vector2 objects and display the graph
 - [x] user must be allow to add a new Vector2 onto the Graph
 - [x] user must be able to output the content of the graph onto the console in a graph-like form
 
-Tests:
-Graph class:
-- constructor negative or out of bounds or > 10 or <= 0 exceptions
-- should not be able to change private attr
-- test with floats as values
+Notes:
+activate the c++98 flag and compile ex01
