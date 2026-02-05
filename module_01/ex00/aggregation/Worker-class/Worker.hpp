@@ -19,14 +19,6 @@ class Worker
             std::cout << "Constructor Worker() called." << std::endl; 
         }
 
-        Worker(Shovel* shovel, Position coordonnee, Statistic stat) : 
-                                                        _shovel(shovel),
-                                                        _coordonnee(coordonnee._x, coordonnee._y, coordonnee._z),
-                                                        _stat(stat._level, stat._exp)
-        { 
-            std::cout << "Constructor Worker(Position coordonnee, Statistic stat) called." << std::endl; 
-        }
-
         ~Worker() 
         { 
             std::cout << "Destructor ~Worker() called." << std::endl; 
@@ -36,26 +28,32 @@ class Worker
         { 
             std::cout << "Worker object data log:" << std::endl; 
             this->_coordonnee.dataLog(); 
-            this->_stat.dataLog(); }
+            this->_stat.dataLog(); 
+        }
 
         // Shovel related methods
-        void giveShovel(Worker& worker) 
+        void equipShovel(Shovel* shovel_to_equip)
+        {
+            if (this->_shovel)
+                std::cerr << "equipShovel(): you already have a shovel equiped" << std::endl;
+            else
+            {
+                if (shovel_to_equip->_owner != NO_OWNER)
+                    shovel_to_equip->_owner->unequipShovel();
+                this->_shovel = shovel_to_equip;
+                shovel_to_equip->_owner = this;
+            }
+        }
+
+        void unequipShovel()
         {
             if (this->_shovel)
             {
-                worker._shovel = this->_shovel;
-                this->_shovel = NULL;
+                this->_shovel->_owner = NO_OWNER;
+                this->_shovel = nullptr;
             }
             else
-                std::cerr << "You could not give your Shovel because you are a looser and you do not have one" << std::endl;
-        }
-        
-        void getRidOfShovel() 
-        {
-            if (this->_shovel)
-                this->_shovel = NULL;
-            else
-                std::cerr << "You could not get rid of your Shovel because you already not have one" << std::endl;
+                std::cerr << "unequipShovel(): you have no shovel equiped" << std::endl;   
         }
 
         void useShovel() 

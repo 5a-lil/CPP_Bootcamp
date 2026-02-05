@@ -2,16 +2,20 @@
 
 int main()
 {
-    Shovel tos;
-    Worker* woft = new Worker(NULL, Position(0, 0, 0), Statistic(0, 0));
-    Worker* golere = new Worker(&tos, Position(0, 0, 0), Statistic(0, 0));
-    golere->useShovel();
-    golere->giveShovel(*woft);
-    golere->useShovel();
+    Shovel* tos = new Shovel;
+    Worker* woft = new Worker;
+    Worker* golere = new Worker;
+    std::cout << "woft address: "<< woft << std::endl;
+    std::cout << "golere address: "<< golere << std::endl;
+    woft->equipShovel(tos);
+    std::cout << tos->_owner << std::endl;
     woft->useShovel();
-    woft->getRidOfShovel();
-    woft->giveShovel(*golere);
+    golere->equipShovel(tos);
+    std::cout << tos->_owner << std::endl;
     woft->useShovel();
+    golere->unequipShovel();
+    std::cout << tos->_owner << std::endl;
+    golere->useShovel();
     delete woft;
     delete golere;
     return 0;
