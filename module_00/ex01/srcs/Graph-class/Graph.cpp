@@ -56,14 +56,15 @@ void Graph::addPoints(std::string input_file_name)
 
         // istringstream taking the line without parentheses
         std::istringstream parse_line_iss(parse_line_buffer.substr(INDEX_TO_SKIP_FIRST_PAR, parse_line_buffer.length() - INDEX_TO_SKIP_LAST_PAR));
+        std::istringstream check_temp_iss; // temp iss for the parsing of the file
         std::string iss_word; // string to store below getline()
         double x_coor(0), y_coor(0); // coor variables for new point
 
         std::getline(parse_line_iss, iss_word, '|'); // parsing left side
-        if (!(std::istringstream(iss_word) >> x_coor)) // check if number
+        if (!((check_temp_iss = std::istringstream(iss_word)) >> std::noskipws >> x_coor && check_temp_iss.eof())) // check if number
             throw InputFileSyntaxNotCorrect();
         std::getline(parse_line_iss, iss_word); // parsing right side
-        if (!(std::istringstream(iss_word) >> y_coor)) // check if number
+        if (!((check_temp_iss = std::istringstream(iss_word)) >> std::noskipws >> y_coor && check_temp_iss.eof())) // check if number
             throw InputFileSyntaxNotCorrect();
         std::cout << "x:" << x_coor << " y:" << y_coor << std::endl; // logging
 
