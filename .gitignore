@@ -1,1 +1,4 @@
+# Ignores obj dirs with the object files
+obj
+compile.out
 /.DS_Store

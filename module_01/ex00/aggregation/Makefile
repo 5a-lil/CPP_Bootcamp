@@ -3,7 +3,7 @@ CPPFLAGS = -Wall -Wextra -Werror -I../ -std=c++98
 SRCS = main.cpp
 OBJDIR = obj
 OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
-NAME = aggregation
+NAME = compile.out
 
 all: $(NAME)
 

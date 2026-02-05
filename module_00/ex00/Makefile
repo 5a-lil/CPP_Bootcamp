@@ -3,7 +3,7 @@ CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 SRCS = main.cpp DivideAndRule.cpp
 OBJDIR = obj
 OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
-NAME = bank
+NAME = compile.out
 
 all: $(NAME)
 
