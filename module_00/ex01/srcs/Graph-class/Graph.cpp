@@ -32,7 +32,7 @@ void Graph::addPoints(Vector2 point)
 
 void Graph::addPoints(std::string input_file_name)
 {
-    std::ifstream input_file_stream(input_file_name); // input-file-stream-from-file-passed-as-arg
+    std::ifstream input_file_stream(input_file_name.c_str()); // input-file-stream-from-file-passed-as-arg
     if (!input_file_stream) 
         throw FailOpeningInputFile();
 
@@ -41,9 +41,9 @@ void Graph::addPoints(std::string input_file_name)
     // Defines-used-in-parsing
     #define INDEX_TO_SKIP_FIRST_PAR 1
     #define INDEX_TO_SKIP_LAST_PAR 2
-    #define CORRECT_FORMAT (parse_line_buffer.front() == '(' /*check-if-first-char-is-parentheses*/ \
+    #define CORRECT_FORMAT (*parse_line_buffer.begin() == '(' /*check-if-first-char-is-parentheses*/ \
                            && count_occurences(parse_line_buffer, '|') == 1 /*check if there is only one pipe*/ \
-                           && parse_line_buffer.back() == ')' /*check if last char is parentheses*/ \
+                           && *(parse_line_buffer.end() - 1) == ')' /*check if last char is parentheses*/ \
                            && *(parse_line_buffer.end() - INDEX_TO_SKIP_LAST_PAR) != '|' /*check if pipe is aside the last parentheses*/ \
                            && *(parse_line_buffer.begin() + INDEX_TO_SKIP_FIRST_PAR) != '|') /*check if pipe is aside the front parentheses*/
 
@@ -56,16 +56,23 @@ void Graph::addPoints(std::string input_file_name)
 
         // istringstream taking the line without parentheses
         std::istringstream parse_line_iss(parse_line_buffer.substr(INDEX_TO_SKIP_FIRST_PAR, parse_line_buffer.length() - INDEX_TO_SKIP_LAST_PAR));
-        std::istringstream check_temp_iss; // temp iss for the parsing of the file
         std::string iss_word; // string to store below getline()
         double x_coor(0), y_coor(0); // coor variables for new point
 
-        std::getline(parse_line_iss, iss_word, '|'); // parsing left side
-        if (!((check_temp_iss = std::istringstream(iss_word)) >> std::noskipws >> x_coor && check_temp_iss.eof())) // check if number
-            throw InputFileSyntaxNotCorrect();
-        std::getline(parse_line_iss, iss_word); // parsing right side
-        if (!((check_temp_iss = std::istringstream(iss_word)) >> std::noskipws >> y_coor && check_temp_iss.eof())) // check if number
-            throw InputFileSyntaxNotCorrect();
+        {
+            std::getline(parse_line_iss, iss_word, '|'); // parsing left side
+            std::istringstream check_temp_iss(iss_word); // temp iss for the parsing of the file
+            if (!(check_temp_iss >> std::noskipws >> x_coor && check_temp_iss.eof())) // check if number
+                throw InputFileSyntaxNotCorrect();
+        }
+
+        {
+            std::getline(parse_line_iss, iss_word); // parsing right side
+            std::istringstream check_temp_iss(iss_word); // temp iss for the parsing of the file
+            if (!(check_temp_iss >> std::noskipws >> y_coor && check_temp_iss.eof())) // check if number
+                throw InputFileSyntaxNotCorrect();
+        }
+
         std::cout << "x:" << x_coor << " y:" << y_coor << std::endl; // logging
 
         this->addPoints(Vector2(x_coor, y_coor)); // adding the point to Graph _points attribute
