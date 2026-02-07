@@ -5,9 +5,12 @@
 #include "../structs/Statistic.hpp"
 #include "../structs/Shovel.hpp"
 
+struct Shovel;
+
 class Worker
 {
     private:
+        friend struct Shovel;
         Shovel* _shovel;
 
     public:
@@ -32,35 +35,5 @@ class Worker
         }
 
         // Shovel related methods
-        void equipShovel(Shovel* shovel_to_equip)
-        {
-            if (this->_shovel)
-                std::cerr << "equipShovel(): you already have a shovel equiped" << std::endl;
-            else
-            {
-                if (shovel_to_equip->_owner != NO_OWNER)
-                    shovel_to_equip->_owner->unequipShovel();
-                this->_shovel = shovel_to_equip;
-                shovel_to_equip->_owner = this;
-            }
-        }
-
-        void unequipShovel()
-        {
-            if (this->_shovel)
-            {
-                this->_shovel->_owner = NO_OWNER;
-                this->_shovel = nullptr;
-            }
-            else
-                std::cerr << "unequipShovel(): you have no shovel equiped" << std::endl;   
-        }
-
-        void useShovel() 
-        {
-            if (this->_shovel)
-                this->_shovel->use();
-            else
-                std::cerr << "No Shovel is equiped to use" << std::endl;
-        }
+        void useShovel();
 };

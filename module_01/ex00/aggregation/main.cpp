@@ -7,14 +7,9 @@ int main()
     Worker* golere = new Worker;
     std::cout << "woft address: "<< woft << std::endl;
     std::cout << "golere address: "<< golere << std::endl;
-    woft->equipShovel(tos);
-    std::cout << tos->_owner << std::endl;
-    woft->useShovel();
-    golere->equipShovel(tos);
-    std::cout << tos->_owner << std::endl;
-    woft->useShovel();
-    golere->unequipShovel();
-    std::cout << tos->_owner << std::endl;
+    tos->giveTo(woft);
+    tos->giveTo(woft);
+    tos->giveTo(golere);
     golere->useShovel();
     delete woft;
     delete golere;

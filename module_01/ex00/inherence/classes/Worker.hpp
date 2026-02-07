@@ -3,29 +3,20 @@
 #include "base_libs.hpp"
 #include "../structs/Position.hpp"
 #include "../structs/Statistic.hpp"
-#include "../classes/Shovel.hpp"
-#include "../classes/Hammer.hpp"
+#include "./Shovel.hpp"
 
 class Worker
 {
     private:
-        Tool* _Tool;
+        Shovel* _shovel;
 
     public:
         Position _coordonnee;
         Statistic _stat;
 
-        Worker() : _Tool(NULL), _coordonnee(), _stat() 
+        Worker() : _shovel(NULL), _coordonnee(), _stat() 
         { 
             std::cout << "Constructor Worker() called." << std::endl; 
-        }
-
-        Worker(Tool* Tool, Position coordonnee, Statistic stat) : 
-                                                        _Tool(Tool),
-                                                        _coordonnee(coordonnee._x, coordonnee._y, coordonnee._z),
-                                                        _stat(stat._level, stat._exp)
-        { 
-            std::cout << "Constructor Worker(Position coordonnee, Statistic stat) called." << std::endl; 
         }
 
         ~Worker() 
@@ -37,33 +28,39 @@ class Worker
         { 
             std::cout << "Worker object data log:" << std::endl; 
             this->_coordonnee.dataLog(); 
-            this->_stat.dataLog(); }
+            this->_stat.dataLog(); 
+        }
 
-        // Tool related methods
-        void giveTool(Worker& worker) 
+        // Shovel related methods
+        void equipShovel(Shovel* shovel_to_equip)
         {
-            if (this->_Tool)
+            if (this->_shovel)
+                std::cerr << "equipShovel(): you already have a shovel equiped" << std::endl;
+            else
             {
-                worker._Tool = this->_Tool;
-                this->_Tool = NULL;
+                if (shovel_to_equip->getOwner() != NO_OWNER)
+                    shovel_to_equip->getOwner()->unequipShovel();
+                this->_shovel = shovel_to_equip;
+                shovel_to_equip->_owner = this;
+            }
+        }
+
+        void unequipShovel()
+        {
+            if (this->_shovel)
+            {
+                this->_shovel->getOwner() = NO_OWNER;
+                this->_shovel = nullptr;
             }
             else
-                std::cerr << "You could not give your Tool because you are a looser and you do not have one" << std::endl;
-        }
-        
-        void getRidOfTool() 
-        {
-            if (this->_Tool)
-                this->_Tool = NULL;
-            else
-                std::cerr << "You could not get rid of your Tool because you already not have one" << std::endl;
+                std::cerr << "unequipShovel(): you have no shovel equiped" << std::endl;   
         }
 
-        void useTool() 
+        void useShovel() 
         {
-            if (this->_Tool)
-                this->_Tool->use();
+            if (this->_shovel)
+                this->_shovel->use();
             else
-                std::cerr << "No Tool is equiped to use" << std::endl;
+                std::cerr << "No Shovel is equiped to use" << std::endl;
         }
 };
