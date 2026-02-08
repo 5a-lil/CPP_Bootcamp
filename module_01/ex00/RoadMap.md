@@ -3,4 +3,4 @@
 - [x] aggregation
 - [ ] association
 - [x] composition
-- [ ] inherence
+- [x] inherence

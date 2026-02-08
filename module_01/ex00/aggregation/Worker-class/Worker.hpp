@@ -19,12 +19,12 @@ class Worker
 
         Worker() : _shovel(NULL), _coordonnee(), _stat() 
         { 
-            std::cout << "Constructor Worker() called." << std::endl; 
+            std::cout << "Constructor Worker() called." << std::endl;
         }
 
         ~Worker() 
         { 
-            std::cout << "Destructor ~Worker() called." << std::endl; 
+            std::cout << "Destructor ~Worker() called." << std::endl;
         }
 
         void dataLog() 
